@@ -1,0 +1,27 @@
+FROM ubuntu:18.04
+MAINTAINER Butler
+
+ADD boost_1_68_0.tar.gz /usr/local/src/
+ADD openssl-1.1.1b.tar.gz /usr/local/src/
+ADD protobuf-cpp-3.8.0.tar.gz /usr/local/src/
+ADD libevent-2.1.8-stable.tar.gz /usr/local/src/
+ADD zlib-1.2.11.tar.gz /usr/local/src/
+
+RUN apt-get update \
+ && apt-get install build-essential -y \
+ && apt-get install make -y
+
+WORKDIR /usr/local/src/boost_1_68_0/
+RUN ./bootstrap.sh && ./b2 install address-model=64
+
+WORKDIR /usr/local/src/openssl-1.1.1b/
+RUN ./config && make && make install
+
+WORKDIR /usr/local/src/libevent-2.1.8-stable/
+RUN ./configure && make && make install
+
+#WORKDIR /usr/local/src/protobuf-cpp-3.8.0/
+#RUN ./configure && make && make install
+
+WORKDIR /usr/local/src/zlib-1.2.11/
+RUN ./configure && make && make install

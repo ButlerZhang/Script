@@ -1,0 +1,48 @@
+FROM ubuntu:18.04
+MAINTAINER Butler
+
+#use 163.com sources list
+#ADD http://mirrors.163.com/.help/sources.list.trusty /etc/apt/sources.list
+
+#copy source code
+ADD boost_1_68_0.tar.gz /usr/local/src/
+ADD openssl-1.1.1b.tar.gz /usr/local/src/
+ADD protobuf-cpp-3.8.0.tar.gz /usr/local/src/
+ADD libevent-2.1.8-stable.tar.gz /usr/local/src/
+ADD zlib-1.2.11.tar.gz /usr/local/src/
+
+#install development tools
+RUN apt-get update\
+ && apt-get install -y build-essential\
+ && apt-get install -y make\
+ && apt-get install -y cmake\
+ && apt-get install -y gdb gdbserver
+
+#build library base on source code
+RUN echo "build boost"\
+ && cd /usr/local/src/boost_1_68_0/\
+ && ./bootstrap.sh && ./b2 install address-model=64\
+ && echo "build openssl"\
+ && cd /usr/local/src/openssl-1.1.1b/\
+ && ./config && make && make install\
+ && echo "build protobuf"\
+ && cd /usr/local/src/protobuf-3.8.0/\
+ && ./configure && make && make install\
+ && echo "build libevent"\
+ && cd /usr/local/src/libevent-2.1.8-stable/\
+ && ./configure OPENSSL_CFLAGS=-I/usr/local/include/openssl OPENSSL_LIBS="-L/usr/local/lib -lssl -lcrypto" && make && make install\
+ && echo "build zlib"\
+ && cd /usr/local/src/zlib-1.2.11/\
+ && ./configure && make && make install\
+ && echo "remove source code"\
+ && rm -rf /usr/local/src/boost_1_68_0/\
+ && rm -rf /usr/local/src/openssl-1.1.1b/\
+ && rm -rf /usr/local/src/protobuf-3.8.0/\
+ && rm -rf /usr/local/src/libevent-2.1.8-stable/\
+ && rm -rf /usr/local/src/zlib-1.2.11/\
+ && echo "build jpc environment successfully!!!"
+
+#delete apt cache
+RUN apt-get clean\
+ && apt-get autoclean\
+ && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

@@ -1,2 +1,2 @@
 # Script
-docker, mysql, mssql, mysql
+linux, docker, mysql, mssql, mysql
