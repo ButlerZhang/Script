@@ -1,0 +1,2 @@
+格式:#连接名# #用户# #密码# #新用户# #新用户密码#
+orcl sys butler BUTLER BUTLER
