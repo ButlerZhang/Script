@@ -1,0 +1,7 @@
+PRINT 'start create Qing database'
+  
+IF EXISTS (SELECT 1 FROM SYS.DATABASES WHERE NAME = 'Qing')
+DROP DATABASE Qing
+GO
+CREATE DATABASE Qing
+GO
